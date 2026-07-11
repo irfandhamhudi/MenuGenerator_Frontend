@@ -16,18 +16,10 @@ export default function NatureTemplate({ title, items }: Props) {
 
         <div className="relative z-10">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="text-2xl">&#127793;</span>
-              <span className="text-2xl">&#127807;</span>
-              <span className="text-2xl">&#127800;</span>
-            </div>
             <h1 className="text-4xl font-bold text-[#2d5a27] tracking-tight leading-tight">
               {title}
             </h1>
-            <p className="text-xs text-[#6b9e5a] uppercase tracking-[0.15em] mt-2 font-medium">
-              Naturally Delicious
-            </p>
-            <div className="w-12 h-1 bg-[#8fc97b] rounded-full mx-auto mt-4" />
+            <div className="w-20 h-1 bg-[#8fc97b] rounded-full mx-auto mt-4" />
           </div>
 
           <div className="space-y-6">
