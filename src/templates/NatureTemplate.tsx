@@ -58,7 +58,7 @@ export default function NatureTemplate({ title, items }: Props) {
 
           <div className="mt-8 pt-5 text-center border-t border-[#c8dcc0]">
             <p className="text-[10px] text-[#8fb88a] uppercase tracking-[0.2em] font-medium">
-              From our kitchen to your table
+              Warmindo Batetes Pelingkau
             </p>
           </div>
         </div>
