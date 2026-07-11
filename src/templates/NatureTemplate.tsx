@@ -19,7 +19,7 @@ export default function NatureTemplate({ title, items }: Props) {
             <h1 className="text-4xl font-bold text-[#2d5a27] tracking-tight leading-tight">
               {title}
             </h1>
-            <div className="w-20 h-1 bg-[#8fc97b] rounded-full mx-auto mt-4" />
+            <div className="w-48 h-1 bg-[#8fc97b] rounded-full mx-auto mt-4" />
           </div>
 
           <div className="space-y-6">
