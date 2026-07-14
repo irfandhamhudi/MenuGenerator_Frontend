@@ -10,11 +10,8 @@ import type { Menu } from "../types";
 import { templates } from "../templates";
 
 const templateNames: Record<string, string> = {
-  modern: "Modern", classic: "Classic", minimal: "Minimal", dark: "Dark",
-  bistro: "Bistro", elegant: "Elegant", vintage: "Vintage", neobrutalism: "Neobrutalism",
-  nature: "Nature", asian: "Asian", monochrome: "Monochrome", playful: "Playful",
-  luxury: "Luxury", fiesta: "Fiesta", mediterranean: "Mediterranean", farm: "Farm",
-  cyberpunk: "Cyberpunk", parisian: "Parisian", tropical: "Tropical", korean: "Korean",
+  modern: "Modern", classic: "Classic", elegant: "Elegant", neobrutalism: "Neobrutalism",
+  nature: "Nature", farm: "Farm", rimberio: "Rimberio",
 };
 
 export default function TrashPage() {

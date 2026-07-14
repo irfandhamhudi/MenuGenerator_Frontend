@@ -11,7 +11,7 @@ export interface MenuItem {
   image?: string;
 }
 
-export type TemplateType = "modern" | "classic" | "minimal" | "dark" | "bistro" | "elegant" | "vintage" | "neobrutalism" | "nature" | "asian" | "monochrome" | "playful" | "luxury" | "fiesta" | "mediterranean" | "farm" | "cyberpunk" | "parisian" | "tropical" | "korean";
+export type TemplateType = "modern" | "classic" | "elegant" | "neobrutalism" | "nature" | "farm" | "rimberio";
 
 export interface Menu {
   _id: string;
