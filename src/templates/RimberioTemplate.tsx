@@ -226,11 +226,7 @@ export default function RimberioTemplate({ title, items }: Props) {
           })}
         </div>
 
-        {/* Footer */}
-        {/* <div className="mt-12 pt-6 border-t border-[#062D24]/10 flex items-center justify-center gap-2 text-xs font-bold text-[#062D24]/60 tracking-wider relative z-10">
-          <GlobeIcon />
-          <span>reallygreatsite.com</span>
-        </div> */}
+        
       </div>
     </div>
   );
