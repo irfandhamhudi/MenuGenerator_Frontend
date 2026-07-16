@@ -39,6 +39,12 @@ export default function MenuPreviewPage() {
   const baseOptions = (): any => ({
     pixelRatio: 3,
     cacheBust: true,
+    skipFonts: false,
+    includeQueryParams: true,
+    filter: (node: HTMLElement) => {
+      if (node.tagName === 'LINK' && node.getAttribute('rel') === 'prefetch') return false;
+      return true;
+    },
     onclone: (doc: Document) => {
       const cloned = doc.querySelector("[data-menu-preview]") as HTMLElement;
       if (cloned) {
@@ -46,51 +52,74 @@ export default function MenuPreviewPage() {
         cloned.style.position = "static";
         cloned.style.visibility = "visible";
         cloned.style.width = "800px";
+        cloned.style.transform = "none";
       }
+      doc.querySelectorAll("svg").forEach((svg) => {
+        if (!svg.getAttribute("xmlns")) {
+          svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        }
+      });
     },
   });
 
-  const exportPng = async () => {
+  const captureElement = async (fn: (el: HTMLElement, opts: any) => Promise<string>, opts: any) => {
     const el = document.querySelector("[data-menu-preview]") as HTMLElement;
-    if (!el) return;
-    const dataUrl = await toPng(el, baseOptions());
-    const link = document.createElement("a");
-    link.download = `${menu?.title || "menu"}.png`;
-    link.href = dataUrl;
-    link.click();
+    if (!el) throw new Error("Preview element not found");
+    try {
+      await fn(el, opts);
+    } catch {}
+    return fn(el, opts);
+  };
+
+  const exportPng = async () => {
+    try {
+      const dataUrl = await captureElement(toPng, baseOptions());
+      const link = document.createElement("a");
+      link.download = `${menu?.title || "menu"}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("PNG export failed", err);
+    }
   };
 
   const exportJpg = async () => {
-    const el = document.querySelector("[data-menu-preview]") as HTMLElement;
-    if (!el) return;
-    const dataUrl = await toJpeg(el, { ...baseOptions(), quality: 0.95 });
-    const link = document.createElement("a");
-    link.download = `${menu?.title || "menu"}.jpg`;
-    link.href = dataUrl;
-    link.click();
+    try {
+      const dataUrl = await captureElement(
+        (el: HTMLElement, opts: any) => toJpeg(el, { ...opts, quality: 0.95 }),
+        baseOptions()
+      );
+      const link = document.createElement("a");
+      link.download = `${menu?.title || "menu"}.jpg`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("JPG export failed", err);
+    }
   };
 
   const exportPdf = async () => {
-    const el = document.querySelector("[data-menu-preview]") as HTMLElement;
-    if (!el) return;
-    const dataUrl = await toPng(el, baseOptions());
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageW = 210;
-    const pageH = 297;
-    const margin = 0;
-    const maxW = pageW;
-    const maxH = pageH;
-    const ratio = el.scrollWidth / el.scrollHeight;
-    let imgW = maxW;
-    let imgH = imgW / ratio;
-    if (imgH > maxH) {
-      imgH = maxH;
-      imgW = imgH * ratio;
+    try {
+      const el = document.querySelector("[data-menu-preview]") as HTMLElement;
+      if (!el) return;
+      const dataUrl = await captureElement(toPng, baseOptions());
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageW = 210;
+      const pageH = 297;
+      const ratio = el.scrollWidth / el.scrollHeight;
+      let imgW = pageW;
+      let imgH = imgW / ratio;
+      if (imgH > pageH) {
+        imgH = pageH;
+        imgW = imgH * ratio;
+      }
+      const x = (pageW - imgW) / 2;
+      const y = (pageH - imgH) / 2;
+      pdf.addImage(dataUrl, "PNG", x, y, imgW, imgH);
+      pdf.save(`${menu?.title || "menu"}.pdf`);
+    } catch (err) {
+      console.error("PDF export failed", err);
     }
-    const x = (pageW - imgW) / 2;
-    const y = (pageH - imgH) / 2;
-    pdf.addImage(dataUrl, "PNG", x, y, imgW, imgH);
-    pdf.save(`${menu?.title || "menu"}.pdf`);
   };
 
   if (loading) {

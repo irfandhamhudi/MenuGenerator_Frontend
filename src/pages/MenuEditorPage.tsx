@@ -42,6 +42,11 @@ function parsePrice(value: string): number {
   return parseInt(cleaned, 10) || 0;
 }
 
+function normalizePrice(value: unknown): number {
+  if (typeof value === "string") return parsePrice(value);
+  return Number(value) || 0;
+}
+
 export default function MenuEditorPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -112,7 +117,12 @@ export default function MenuEditorPage() {
     if (autoSaveTimeout.current) clearTimeout(autoSaveTimeout.current);
     autoSaveTimeout.current = setTimeout(async () => {
       setSaving(true);
-      const data = { title, template, categories, items: items.filter((i) => i.name) };
+      const data = {
+        title,
+        template,
+        categories,
+        items: items.filter((i) => i.name).map((item) => ({ ...item, price: normalizePrice(item.price) })),
+      };
       try {
         await updateMenu(id!, data);
       } catch {
@@ -161,7 +171,11 @@ export default function MenuEditorPage() {
 
   const removeCategory = (cat: string) => {
     setCategories((prev) => prev.filter((c) => c !== cat));
-    setItems((prev) => prev.map((item) => (item.category === cat ? { ...item, category: "" } : item)));
+        setItems((prev) => prev.map((item) => (
+          item.category === cat 
+            ? { ...item, category: "", price: normalizePrice(item.price) }
+            : item
+        )));
   };
 
   const openAddDialog = (presetCategory?: string) => {
@@ -199,7 +213,7 @@ export default function MenuEditorPage() {
   const saveItem = () => {
     if (!formItem.name.trim()) return;
     if (editingIdx !== null) {
-      setItems((prev) => prev.map((item, i) => (i === editingIdx ? { ...formItem } : item)));
+      setItems((prev) => prev.map((item, i) => (i === editingIdx ? { ...formItem, price: normalizePrice(formItem.price) } : item)));
     } else {
       setItems((prev) => [...prev, { ...formItem }]);
     }
@@ -220,7 +234,15 @@ export default function MenuEditorPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    const data = { title, template, categories, items: items.filter((i) => i.name) };
+    const data = { 
+      title, 
+      template, 
+      categories, 
+      items: items.filter((i) => i.name).map(item => ({
+        ...item,
+        price: normalizePrice(item.price),
+      }))
+    };
     try {
       if (isEditing) {
         await updateMenu(id!, data);
@@ -230,6 +252,7 @@ export default function MenuEditorPage() {
       navigate("/dashboard");
     } catch (err) {
       console.error("Save failed", err);
+      alert("Failed to save menu. Please try again.");
     } finally {
       setSaving(false);
     }

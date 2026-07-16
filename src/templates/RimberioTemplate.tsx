@@ -8,7 +8,10 @@ interface Props {
 // Organic hand-drawn leaf outline SVG
 const LeafOutline = ({ className }: { className?: string }) => (
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 200 400"
+    width="200"
+    height="400"
     fill="none"
     stroke="currentColor"
     strokeWidth="1.2"
@@ -51,9 +54,12 @@ const LeafOutline = ({ className }: { className?: string }) => (
 // Fork & Knife SVG path
 const ForkKnifeIcon = () => (
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     className="w-4 h-4 text-[#062D24]"
     fill="none"
     viewBox="0 0 24 24"
+    width="24"
+    height="24"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
@@ -69,9 +75,12 @@ const ForkKnifeIcon = () => (
 // Drink glass SVG path
 const GlassIcon = () => (
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     className="w-4 h-4 text-[#062D24]"
     fill="none"
     viewBox="0 0 24 24"
+    width="24"
+    height="24"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
@@ -87,9 +96,12 @@ const GlassIcon = () => (
 // Globe SVG path
 const GlobeIcon = () => (
   <svg
+    xmlns="http://www.w3.org/2000/svg"
     className="w-3.5 h-3.5 text-[#062D24]/60"
     fill="none"
     viewBox="0 0 24 24"
+    width="24"
+    height="24"
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
@@ -103,11 +115,15 @@ const GlobeIcon = () => (
 
 // Formats prices to 'k' notation (e.g. 12000 -> 12k, 12500 -> 12.5k)
 const formatRimberioPrice = (price: number): string => {
-  if (price >= 1000) {
-    const kValue = price / 1000;
+  const numPrice = Number(price);
+  if (isNaN(numPrice)) return "0k";
+  if (numPrice < 0) return "0k";
+  if (numPrice === 0) return "0k";
+  if (numPrice >= 1000) {
+    const kValue = numPrice / 1000;
     return `${Number(kValue.toFixed(1))}k`;
   }
-  return price.toString();
+  return `${Math.floor(numPrice)}`;
 };
 
 export default function RimberioTemplate({ title, items }: Props) {
@@ -147,7 +163,7 @@ export default function RimberioTemplate({ title, items }: Props) {
             {title}
           </h1>
           <p className="text-xs font-bold text-[#062D24]/80 tracking-[0.1em] mt-3">
-            Cafe Gen-Z Terlangka di Bumi!
+            Warmindo Batetes Pelingkau
           </p>
         </div>
 
@@ -211,10 +227,10 @@ export default function RimberioTemplate({ title, items }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-[#062D24]/10 flex items-center justify-center gap-2 text-xs font-bold text-[#062D24]/60 tracking-wider relative z-10">
+        {/* <div className="mt-12 pt-6 border-t border-[#062D24]/10 flex items-center justify-center gap-2 text-xs font-bold text-[#062D24]/60 tracking-wider relative z-10">
           <GlobeIcon />
           <span>reallygreatsite.com</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );
